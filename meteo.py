@@ -7,7 +7,7 @@ import datetime
 
 
 values = {"temperature": None, "humidity": None}
-firebase_url = "https://<db-name>.firebaseio.com
+firebase_url = "https://<db-name>.firebaseio.com"
 
 def on_connect(client, userdata, session, rc):
     client.subscribe("temperature")
