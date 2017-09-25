@@ -4,10 +4,16 @@ import paho.mqtt.client as mqtt
 import requests
 import json
 import datetime
+import sys
 
+
+if len(sys.argv) < 2:
+    print("usage: meteo.py <firebase_url>")
+    exit(1)
 
 values = {"temperature": None, "humidity": None}
-firebase_url = "https://<db-name>.firebaseio.com"
+firebase_url = sys.argv[1]
+
 
 def on_connect(client, userdata, session, rc):
     client.subscribe("temperature")
@@ -32,4 +38,3 @@ client.on_connect = on_connect
 client.on_message = on_message
 client.connect("localhost", 1883, 60)
 client.loop_forever()
-
