@@ -35,7 +35,6 @@ def on_message(client, userdata, msg):
         data = dict([(i, True) for i in info[device]])
         requests.put(url, data=json.dumps(data))
     else:
-        print(topic, value)
         values[device][topic] = float(value)
 
         if (device in info and
