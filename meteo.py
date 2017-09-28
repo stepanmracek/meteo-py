@@ -20,6 +20,14 @@ def on_connect(client, userdata, session, rc):
     client.subscribe("device/+/+")
 
 
+def httpPut(url, data):
+    try:
+        requests.put(url, data=json.dumps(data))
+    except Exception as e:
+        print(e)
+        pass
+
+
 def on_message(client, userdata, msg):
     value = msg.payload.decode("utf-8")
     topicItems = msg.topic.split('/')
@@ -33,7 +41,7 @@ def on_message(client, userdata, msg):
         info[device] = value.split(':')
         url = firebase_url + "/devices/" + device + ".json"
         data = dict([(i, True) for i in info[device]])
-        requests.put(url, data=json.dumps(data))
+        httpPut(url, data)
     else:
         values[device][topic] = float(value)
 
@@ -42,9 +50,9 @@ def on_message(client, userdata, msg):
             topic == info[device][0] and
             len(info[device]) == len(values[device])):
 
-            key = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+            key = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
             url = firebase_url + "/values/" + device + '/' + key + ".json"
-            requests.put(url, data=json.dumps(values[device]))
+            httpPut(url, values[device])
 
 
 client = mqtt.Client()
